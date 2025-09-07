@@ -92,9 +92,9 @@ public class CredentialService {
         byte[] plain = cipher.doFinal(ct);
         return new String(plain, StandardCharsets.UTF_8);
     }
-}
 
 
     public void delete(Credential c) {
         repo.delete(c);
     }
+}
