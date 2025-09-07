@@ -1,5 +1,4 @@
-
-# Secret for MySQL and APP_MASTER_KEY (base64 values should be provided)
+# Secret for MySQL and APP_MASTER_KEY
 apiVersion: v1
 kind: Secret
 metadata:
@@ -9,7 +8,7 @@ stringData:
   mysql-root-password: rootpass
   mysql-user: passman
   mysql-password: passmanpass
-  app-master-key: "" # set base64 or raw; replace with a secure value in production
+  app-master-key: "nq1N1F8jzGkGZ4v0m3D+vOfnW+lsJc2rYnO/UvBHZj8="  # replace with secure base64 value
 ---
 # PersistentVolumeClaim for MySQL data
 apiVersion: v1
