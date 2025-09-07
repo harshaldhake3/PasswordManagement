@@ -1,0 +1,47 @@
+---
+# Namespace for Passman
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: passman
+---
+# Service Account in passman namespace
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: passman-sa
+  namespace: passman
+---
+# ClusterRole with full permissions
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: passman-admin-role
+rules:
+  - apiGroups: ["*"]
+    resources: ["*"]
+    verbs: ["*"]
+---
+# ClusterRoleBinding to bind SA to admin role
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: passman-admin-binding
+subjects:
+  - kind: ServiceAccount
+    name: passman-sa
+    namespace: passman
+roleRef:
+  kind: ClusterRole
+  name: passman-admin-role
+  apiGroup: rbac.authorization.k8s.io
+---
+# ServiceAccount token Secret
+apiVersion: v1
+kind: Secret
+metadata:
+  name: passman-sa-token
+  namespace: passman
+  annotations:
+    kubernetes.io/service-account.name: passman-sa
+type: kubernetes.io/service-account-token
