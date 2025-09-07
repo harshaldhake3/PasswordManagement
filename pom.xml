@@ -55,16 +55,16 @@
         <repository>
             <id>nexus-releases</id>
             <name>Nexus Release Repository</name>
-            <url>http://nexus.example.com:8081/repository/maven-releases/</url>
+            <url>http://192.168.1.22:32003/repository/maven-releases/</url>
         </repository>
         <snapshotRepository>
             <id>nexus-snapshots</id>
             <name>Nexus Snapshot Repository</name>
-            <url>http://nexus.example.com:8081/repository/maven-snapshots/</url>
+            <url>http://192.168.1.22:32003/repository/maven-snapshots/</url>
         </snapshotRepository>
 
         <!-- JFrog Artifactory Repositories -->
-        <repository>
+        <!-- <repository>
             <id>jfrog-releases</id>
             <name>JFrog Release Repository</name>
             <url>https://yourcompany.jfrog.io/artifactory/maven-releases/</url>
@@ -74,7 +74,7 @@
             <name>JFrog Snapshot Repository</name>
             <url>https://yourcompany.jfrog.io/artifactory/maven-snapshots/</url>
         </snapshotRepository>
-    </distributionManagement>
+    </distributionManagement> -->
 
     <build>
         <plugins>
