@@ -11,7 +11,8 @@ FROM eclipse-temurin:17-jre
 WORKDIR /app
 # create unprivileged user
 RUN addgroup --system app && adduser --system --ingroup app app
-COPY --from=build /build/target/passman-0.0.1-SNAPSHOT.jar app.jar
+# COPY --from=build /build/target/passman-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=build /build/target/*.jar app.jar
 USER app
 EXPOSE 8080
 HEALTHCHECK --interval=30s --timeout=5s --start-period=30s CMD curl -f http://localhost:8080/actuator/health || exit 1
