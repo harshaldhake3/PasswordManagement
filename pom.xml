@@ -5,6 +5,15 @@
          http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
+
+    <!-- Parent Spring Boot -->
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>${spring.boot.version}</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+
     <groupId>com.example</groupId>
     <artifactId>passman</artifactId>
     <version>0.0.1-SNAPSHOT</version>
@@ -17,6 +26,7 @@
     </properties>
 
     <dependencies>
+        <!-- Spring Boot dependencies -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -33,19 +43,25 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
+
+        <!-- Database -->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
             <scope>runtime</scope>
         </dependency>
+
+        <!-- Monitoring -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+        <!-- Testing -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
     </dependencies>
 
@@ -63,8 +79,9 @@
             <url>http://192.168.1.22:32003/repository/maven-snapshots/</url>
         </snapshotRepository>
 
-        <!-- JFrog Artifactory Repositories -->
-        <!-- <repository>
+        <!-- JFrog Artifactory Repositories (commented) -->
+        <!--
+        <repository>
             <id>jfrog-releases</id>
             <name>JFrog Release Repository</name>
             <url>https://yourcompany.jfrog.io/artifactory/maven-releases/</url>
@@ -74,7 +91,8 @@
             <name>JFrog Snapshot Repository</name>
             <url>https://yourcompany.jfrog.io/artifactory/maven-snapshots/</url>
         </snapshotRepository>
-    </distributionManagement> -->
+        -->
+    </distributionManagement>
 
     <build>
         <plugins>
@@ -85,4 +103,3 @@
         </plugins>
     </build>
 </project>
-
