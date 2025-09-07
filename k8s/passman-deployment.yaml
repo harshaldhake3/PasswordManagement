@@ -79,7 +79,7 @@ spec:
     spec:
       containers:
         - name: passman
-          image: your-docker-registry/passman:latest
+          image: harshaladmin/passmanager:latest
           ports:
             - containerPort: 8080
           env:
