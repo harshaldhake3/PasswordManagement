@@ -1,0 +1,105 @@
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: passman-db-secret
+type: Opaque
+stringData:
+  mysql-root-password: rootpass
+  mysql-user: passman
+  mysql-password: passmanpass
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+spec:
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+        - name: mysql
+          image: mysql:8.0
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: passman-db-secret
+                  key: mysql-root-password
+            - name: MYSQL_DATABASE
+              value: passmandb
+            - name: MYSQL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: passman-db-secret
+                  key: mysql-user
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: passman-db-secret
+                  key: mysql-password
+          ports:
+            - containerPort: 3306
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+spec:
+  selector:
+    app: mysql
+  ports:
+    - port: 3306
+      targetPort: 3306
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: passman-app
+spec:
+  selector:
+    matchLabels:
+      app: passman-app
+  template:
+    metadata:
+      labels:
+        app: passman-app
+    spec:
+      containers:
+        - name: passman
+          image: your-docker-registry/passman:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:mysql://mysql:3306/passmandb
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: passman-db-secret
+                  key: mysql-user
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: passman-db-secret
+                  key: mysql-password
+            # set APP_MASTER_KEY (base64) as a k8s secret in production
+            - name: APP_MASTER_KEY
+              value: ""
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: passman
+spec:
+  selector:
+    app: passman-app
+  ports:
+    - port: 80
+      targetPort: 8080
+  type: LoadBalancer

@@ -1,0 +1,205 @@
+
+# Secret for MySQL and APP_MASTER_KEY (base64 values should be provided)
+apiVersion: v1
+kind: Secret
+metadata:
+  name: passman-secrets
+type: Opaque
+stringData:
+  mysql-root-password: rootpass
+  mysql-user: passman
+  mysql-password: passmanpass
+  app-master-key: "" # set base64 or raw; replace with a secure value in production
+---
+# PersistentVolumeClaim for MySQL data
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+  storageClassName: standard
+---
+# MySQL Deployment with PVC
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+        - name: mysql
+          image: mysql:8.0
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+            limits:
+              cpu: "500m"
+              memory: "1Gi"
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: passman-secrets
+                  key: mysql-root-password
+            - name: MYSQL_DATABASE
+              value: passmandb
+            - name: MYSQL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: passman-secrets
+                  key: mysql-user
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: passman-secrets
+                  key: mysql-password
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - name: mysql-data
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: mysql-data
+          persistentVolumeClaim:
+            claimName: mysql-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+spec:
+  selector:
+    app: mysql
+  ports:
+    - port: 3306
+      targetPort: 3306
+  clusterIP: None
+---
+# Passman application Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: passman-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: passman-app
+  template:
+    metadata:
+      labels:
+        app: passman-app
+    spec:
+      containers:
+        - name: passman
+          image: your-docker-registry/passman:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:mysql://mysql:3306/passmandb
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: passman-secrets
+                  key: mysql-user
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: passman-secrets
+                  key: mysql-password
+            - name: APP_MASTER_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: passman-secrets
+                  key: app-master-key
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 20
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "256Mi"
+            limits:
+              cpu: "1000m"
+              memory: "1Gi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: passman
+spec:
+  selector:
+    app: passman-app
+  ports:
+    - port: 80
+      targetPort: 8080
+  type: ClusterIP
+---
+# Ingress (assumes nginx ingress controller). Replace host with your domain.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: passman-ingress
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  tls:
+    - hosts:
+        - passman.example.com
+      secretName: tls-passman # create TLS secret for your domain
+  rules:
+    - host: passman.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: passman
+                port:
+                  number: 80
+---
+# HorizontalPodAutoscaler for passman app
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: passman-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: passman-app
+  minReplicas: 2
+  maxReplicas: 5
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 60

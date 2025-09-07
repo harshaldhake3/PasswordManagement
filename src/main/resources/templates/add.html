@@ -1,0 +1,15 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><title>Add Credential</title></head>
+<body>
+<h2>Add Credential</h2>
+<form th:action="@{/credentials/add}" method="post">
+    <div><label>Site: <input type="text" name="site"/></label></div>
+    <div><label>Login Username: <input type="text" name="loginUsername"/></label></div>
+    <div><label>Password: <input type="password" name="password"/></label></div>
+    <div><button type="submit">Save</button></div>
+</form>
+<p><a th:href="@{/credentials}">Back</a></p>
+</body>
+</html>
