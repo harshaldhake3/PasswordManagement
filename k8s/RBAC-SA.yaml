@@ -12,7 +12,7 @@ metadata:
   name: passman-sa
   namespace: passman
 ---
-# ClusterRole with full permissions
+# ClusterRole with full permissions (equivalent to cluster-admin)
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
@@ -36,7 +36,7 @@ roleRef:
   name: passman-admin-role
   apiGroup: rbac.authorization.k8s.io
 ---
-# ServiceAccount token Secret
+# ServiceAccount token Secret (for Jenkins)
 apiVersion: v1
 kind: Secret
 metadata:
