@@ -79,7 +79,7 @@ spec:
     spec:
       containers:
         - name: passman
-          image: harshaladmin/passmanager:latest
+          image: harshaladmin/passwordmanager:latest
           ports:
             - containerPort: 8080
           env:
@@ -112,4 +112,4 @@ spec:
     - port: 80
       targetPort: 8080
       nodePort: 32004
-  type: Nodeport
+  type: NodePort
