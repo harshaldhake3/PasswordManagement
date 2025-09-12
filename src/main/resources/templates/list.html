@@ -42,7 +42,7 @@
             <td th:text="${c.site}"></td>
             <td th:text="${c.loginUsername}"></td>
             <td>
-                <span class="badge text-bg-secondary me-1" th:each="t : ${#strings.arraySplit(c.tags?:'', ',')}" th:text="${#strings.trim(t)}"></span>
+                <span class="badge text-bg-secondary me-1" th:each="t : ${#strings.arraySplit((c.tags == null ? '' : c.tags), ',')}" th:text="${#strings.trim(t)}"></span>
             </td>
             <td>
                 <span class="badge" th:classappend="
