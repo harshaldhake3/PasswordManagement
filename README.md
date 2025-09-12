@@ -34,3 +34,10 @@ Security notes:
 4. Ensure an ingress controller (e.g., nginx) is installed and configure DNS for `passman.example.com` or replace with your domain.
 5. Use a Kubernetes secret manager (Vault, SealedSecrets, or cloud KMS) for production secret management.
 # PasswordManagement
+
+
+See **docs/Release_Notes_v2.md** for the latest features and architecture updates.
+
+See **docs/System_Diagrams_and_Workflow_v3.md** for diagrams and code flow in v3.
+
+See **docs/System_Diagrams_and_Workflow_v4.md** for the latest system diagram, application diagram, and workflows.

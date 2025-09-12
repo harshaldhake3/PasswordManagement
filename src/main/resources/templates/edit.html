@@ -1,18 +1,35 @@
-
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Edit Credential</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/app.css" rel="stylesheet">
 </head>
-<body class="container mt-4">
-<h2>Edit Credential</h2>
-<form th:action="@{|/credentials/edit/${cred.id}|}" method="post">
-    <div class="mb-3"><label class="form-label">Site: <input class="form-control" type="text" name="site" th:value="${cred.site}"/></label></div>
-    <div class="mb-3"><label class="form-label">Login Username: <input class="form-control" type="text" name="loginUsername" th:value="${cred.loginUsername}"/></label></div>
-    <div class="mb-3"><label class="form-label">Password (leave blank to keep): <input class="form-control" type="password" name="password"/></label></div>
-    <button type="submit" class="btn btn-primary">Update</button>
-    <a class="btn btn-secondary" th:href="@{/credentials}">Cancel</a>
+<body class="container py-4">
+<h2 class="mb-3">Edit Credential</h2>
+<form th:action="@{|/credentials/edit/${cred.id}|}" method="post" class="card p-3">
+    <div class="mb-3"><label class="form-label">Site<input class="form-control" type="text" name="site" th:value="${cred.site}" required/></label></div>
+    <div class="mb-3"><label class="form-label">Login Username<input class="form-control" type="text" name="loginUsername" th:value="${cred.loginUsername}" required/></label></div>
+    <div class="mb-3">
+        <label class="form-label">Password</label>
+        <div class="input-group">
+            <input class="form-control" type="password" name="password" required/>
+            <button id="togglePwInput" class="btn btn-outline-secondary" type="button">Show</button>
+            <button id="genPw" class="btn btn-outline-primary" type="button">Generate</button>
+        </div>
+        <div class="progress mt-2" style="height:8px;">
+            <div id="pwStrength" class="progress-bar bg-danger" role="progressbar" style="width: 0%;" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+    </div>
+    <div class="mb-3"><label class="form-label">Tags (comma separated)<input class="form-control" type="text" name="tags" th:value="${cred.tags}"/></label></div>
+    <div class="mb-3"><label class="form-label">Notes<textarea class="form-control" name="notes" rows="4" th:text="${cred.notes}" placeholder="Write secure notes…"></textarea></label></div>
+    <div class="form-check mb-3"><input class="form-check-input" type="checkbox" name="favorite" id="fav" th:checked="${cred.favorite}"><label for="fav" class="form-check-label">Mark as favorite</label></div>
+    <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-success">Save</button>
+        <a class="btn btn-secondary" th:href="@{/credentials}">Cancel</a>
+    </div>
 </form>
+<script src="/js/app.js"></script>
+<div id="toast-container" class="toast-container"></div>
 </body>
 </html>
