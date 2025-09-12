@@ -1,0 +1,22 @@
+
+:root {
+  --bg: #ffffff;
+  --fg: #111827;
+  --muted: #6b7280;
+  --card: #f9fafb;
+  --border: #e5e7eb;
+}
+html.dark {
+  --bg: #0b0f14;
+  --fg: #e5e7eb;
+  --muted: #94a3b8;
+  --card: #0f1720;
+  --border: #1f2937;
+}
+body { background: var(--bg); color: var(--fg); }
+.card { background: var(--card); border-color: var(--border); }
+.table thead th { cursor: pointer; }
+.badge-muted { background: var(--border); color: var(--muted); }
+.theme-toggle { position: fixed; right: 1rem; bottom: 1rem; z-index: 999; }
+.toast-container { position: fixed; top: 1rem; right: 1rem; z-index: 2000; }
+textarea.notes-area { min-height: 140px; }
