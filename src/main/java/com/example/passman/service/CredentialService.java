@@ -14,10 +14,55 @@ import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.Base64;
+import java.util.*;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 @Service
 public class CredentialService {
+
+    @Autowired private BreachCheckService breach;
+    @Value("${security.password.max-age-days:180}") private int maxAgeDays;
+
+
+    private java.time.Clock clock = java.time.Clock.systemDefaultZone();
+
+    public void touchCreate(Credential c) { c.setCreatedAt(java.time.LocalDateTime.now(clock)); c.setLastUpdatedAt(java.time.LocalDateTime.now(clock)); c.setPasswordUpdatedAt(java.time.LocalDateTime.now(clock)); }
+    public void touchUpdate(Credential c) { c.setLastUpdatedAt(java.time.LocalDateTime.now(clock)); }
+    public void touchPasswordRotate(Credential c) { c.setPasswordUpdatedAt(java.time.LocalDateTime.now(clock)); }
+
+    public int passwordStrength(String s) {
+        int score = 0;
+        if (s == null) return 0;
+        if (s.length() >= 12) score++;
+        if (s.matches(".*[A-Z].*") && s.matches(".*[a-z].*")) score++;
+        if (s.matches(".*[0-9].*")) score++;
+        if (s.matches(".*[^A-Za-z0-9].*")) score++;
+        return score; // 0..4
+    }
+
+    public Map<Long, Integer> strengthById(List<Credential> creds) {
+        Map<Long, Integer> out = new HashMap<>();
+        for (Credential c : creds) {
+            try { out.put(c.getId(), passwordStrength(decryptPassword(c))); } catch (Exception ex) { out.put(c.getId(), 0); }
+        }
+        return out;
+    }
+
+    public Set<String> reusedPasswords(List<Credential> creds) {
+        Map<String, Integer> counts = new HashMap<>();
+        for (Credential c : creds) {
+            try {
+                String p = decryptPassword(c);
+                counts.put(p, counts.getOrDefault(p, 0)+1);
+            } catch (Exception ignored) {}
+        }
+        Set<String> reused = new HashSet<>();
+        for (var e : counts.entrySet()) if (e.getValue() > 1) reused.add(e.getKey());
+        return reused;
+    }
+
 
     private final CredentialRepository repo;
 
@@ -98,3 +143,26 @@ public class CredentialService {
         repo.delete(c);
     }
 }
+
+    public Set<Long> compromisedIds(List<Credential> creds) {
+        Set<Long> out = new HashSet<>();
+        for (Credential c : creds) {
+            try {
+                String p = decryptPassword(c);
+                if (breach != null && breach.isEnabled() && breach.isCompromised(p)) out.add(c.getId());
+            } catch (Exception ignored) {}
+        }
+        return out;
+    }
+
+    public Set<Long> staleIds(List<Credential> creds) {
+        Set<Long> out = new HashSet<>();
+        if (maxAgeDays <= 0) return out;
+        java.time.LocalDateTime cutoff = java.time.LocalDateTime.now().minusDays(maxAgeDays);
+        for (Credential c : creds) {
+            if (c.getPasswordUpdatedAt() != null && c.getPasswordUpdatedAt().isBefore(cutoff)) {
+                out.add(c.getId());
+            }
+        }
+        return out;
+    }
