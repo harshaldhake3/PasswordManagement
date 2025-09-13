@@ -16,6 +16,9 @@ public class AppUser {
     @Column(nullable = false)
     private String passwordHash;
 
+        @Column(nullable = false)
+    private String role = "ROLE_USER";
+
     // getters/setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -24,5 +27,8 @@ public class AppUser {
     public void setUsername(String username) { this.username = username; }
 
     public String getPasswordHash() { return passwordHash; }
+
+    public String getRole() { return role; }
+    public void setRole(String role) { this.role = role; }
     public void setPasswordHash(String passwordHash) { this.passwordHash = passwordHash; }
 }

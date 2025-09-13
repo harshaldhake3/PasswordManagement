@@ -21,6 +21,6 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         AppUser u = repo.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        return User.withUsername(u.getUsername()).password(u.getPasswordHash()).roles("USER").build();
+        return User.withUsername(u.getUsername()).password(u.getPasswordHash()).roles(u.getRole().replace("ROLE_","")).build();
     }
 }

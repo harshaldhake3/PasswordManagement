@@ -6,10 +6,7 @@
     <link href="/css/app.css" rel="stylesheet">
 </head>
 <body class="container py-4">
-    <div class="mb-3 d-flex justify-content-between align-items-center">
-        <a class="btn btn-secondary" th:href="@{/credentials}">← Back</a>
-        <div></div>
-    </div>
+    <div class="mb-3"><a class="btn btn-secondary" th:href="@{/credentials}">← Back</a></div>
     <div class="card" th:attr="data-cred-id=${cred.id}">
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-center">
@@ -28,35 +25,18 @@
                 <div class="col-md-6">
                     <div class="mb-2">Password</div>
                     <div class="input-group">
-                        <span id="pwText" class="form-control" style="filter: blur(6px);" th:text="${plainPassword} ?: '••••••••••'"></span>
-                        <button class="btn btn-outline-secondary" id="togglePass" type="button" th:disabled="${plainPassword} == null">Show</button>
-                        <button class="btn btn-outline-primary" id="copyPass" type="button" th:disabled="${plainPassword} == null">Copy</button>
-                    </div>
-                    <form class="mt-2 d-flex gap-2" th:action="@{|/credentials/view/${cred.id}/reveal|}" method="post" th:if="${plainPassword} == null">
-                        <input type="password" name="confirmPassword" class="form-control" placeholder="Confirm your account password to reveal" required>
-                        <button class="btn btn-primary" type="submit">Reveal</button>
-                    </form>
-                    <div class="text-danger mt-2" th:if="${error}" th:text="${error}"></div>
-                </div>
-            </div>
-            <hr/>
-            <div class="row g-3">
-                <div class="col-md-8">
-                    <div class="mb-2">Tags (comma separated)</div>
-                    <div class="form-control" th:text="${cred.tags}">tags</div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-check mt-4">
-                        <input class="form-check-input" type="checkbox" disabled th:checked="${cred.favorite}">
-                        <label class="form-check-label">Favorite</label>
+                        <span id="pwText" class="form-control" style="filter: blur(6px);" th:text="${plainPassword}"></span>
+                        <button class="btn btn-outline-secondary" id="togglePass" type="button">Show</button>
+                        <button class="btn btn-outline-primary" id="copyPass" type="button">Copy</button>
                     </div>
                 </div>
             </div>
             <hr/>
             <div class="mb-2 d-flex align-items-center justify-content-between">
                 <h5 class="mb-0">Notes</h5>
+                <button class="btn btn-outline-primary btn-sm" id="saveNoteView">Save</button>
             </div>
-            <div class="form-control" style="min-height:120px;" th:text="${cred.notes}"></div>
+            <textarea id="notesView" class="form-control notes-area" placeholder="Write private notes…"></textarea>
         </div>
     </div>
     <script src="/js/app.js"></script>

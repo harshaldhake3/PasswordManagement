@@ -8,8 +8,8 @@
 <body class="container py-4">
 <h2 class="mb-3">Edit Credential</h2>
 <form th:action="@{|/credentials/edit/${cred.id}|}" method="post" class="card p-3">
-    <div class="mb-3"><label class="form-label">Site<input class="form-control" type="text" name="site" th:value="${cred.site}" required/></label></div>
-    <div class="mb-3"><label class="form-label">Login Username<input class="form-control" type="text" name="loginUsername" th:value="${cred.loginUsername}" required/></label></div>
+    <div class="mb-3"><label class="form-label">Site<input class="form-control" type="text" name="site" required/></label></div>
+    <div class="mb-3"><label class="form-label">Login Username<input class="form-control" type="text" name="loginUsername" required/></label></div>
     <div class="mb-3">
         <label class="form-label">Password</label>
         <div class="input-group">
@@ -21,13 +21,24 @@
             <div id="pwStrength" class="progress-bar bg-danger" role="progressbar" style="width: 0%;" aria-valuemin="0" aria-valuemax="100"></div>
         </div>
     </div>
-    <div class="mb-3"><label class="form-label">Tags (comma separated)<input class="form-control" type="text" name="tags" th:value="${cred.tags}"/></label></div>
-    <div class="mb-3"><label class="form-label">Notes<textarea class="form-control" name="notes" rows="4" th:text="${cred.notes}" placeholder="Write secure notes…"></textarea></label></div>
-    <div class="form-check mb-3"><input class="form-check-input" type="checkbox" name="favorite" id="fav" th:checked="${cred.favorite}"><label for="fav" class="form-check-label">Mark as favorite</label></div>
     <div class="d-flex gap-2">
-        <button type="submit" class="btn btn-success">Save</button>
+        <button type="submit" class="btn btn-warning">Update</button>
         <a class="btn btn-secondary" th:href="@{/credentials}">Cancel</a>
     </div>
+
+<div class="mb-3"><label class="form-label">URL
+  <input class="form-control" type="url" name="url" th:value="${cred.url}"/>
+</label></div>
+<div class="mb-3"><label class="form-label">Tags
+  <input class="form-control" type="text" name="tags" th:value="${cred.tags}"/>
+</label></div>
+<div class="mb-3"><label class="form-label">Notes
+  <textarea class="form-control" name="notes" rows="3" th:text="${cred.notes}"></textarea>
+</label></div>
+<div class="mb-3">
+  <button type="button" class="btn btn-outline-secondary me-2" id="gen-pass">Generate</button>
+  <span id="strength" class="badge badge-muted">Strength: -</span>
+</div>
 </form>
 <script src="/js/app.js"></script>
 <div id="toast-container" class="toast-container"></div>

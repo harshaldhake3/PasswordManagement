@@ -36,8 +36,12 @@ Security notes:
 # PasswordManagement
 
 
-See **docs/Release_Notes_v2.md** for the latest features and architecture updates.
+See **docs/Architecture_and_Enhancements.md** for system architecture and the list of UX enhancements.
 
-See **docs/System_Diagrams_and_Workflow_v3.md** for diagrams and code flow in v3.
 
-See **docs/System_Diagrams_and_Workflow_v4.md** for the latest system diagram, application diagram, and workflows.
+## v5 Enhancements
+- Admin Console at `/admin/dashboard` (requires ROLE_ADMIN)
+- Read-only SQL runner & H2 console link
+- Credential fields: URL, Tags, Notes
+- Password generator + strength meter, copy buttons
+- Export CSV remains; import coming soon
