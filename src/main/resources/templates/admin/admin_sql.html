@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin · SQL</title>
+  <link rel="stylesheet" th:href="@{/css/admin.css}"/>
+  <script defer th:src="@{/js/admin.js}"></script>
+</head>
+<body>
+<header class="admin-header">
+  <h1>Read‑only SQL</h1>
+  <nav>
+    <a th:href="@{/admin/dashboard}">Dashboard</a>
+    <a th:href="@{/admin/users}">Users</a>
+    <a th:href="@{/admin/credentials}">Credentials</a>
+  </nav>
+</header>
+
+<section class="panel">
+  <form method="post">
+    <textarea name="q" rows="6" placeholder="SELECT * FROM credential" th:text="${q}">SELECT * FROM credential</textarea>
+    <div class="actions">
+      <button type="submit">Run</button>
+      <span class="error" th:if="${error}" th:text="${error}"></span>
+    </div>
+  </form>
+</section>
+
+<section th:if="${#lists.size(rows) > 0}">
+  <table class="table">
+    <thead>
+      <tr>
+        <th th:each="c : ${cols}" th:text="${c}">col</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr th:each="r : ${rows}">
+        <td th:each="c : ${cols}" th:text="${r.get(c)}">val</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+</body>
+</html>
