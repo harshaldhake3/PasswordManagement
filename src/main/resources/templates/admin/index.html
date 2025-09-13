@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="fragments/layout :: layout('Admin', ~{::body})">
+<body>
+  <div class="row g-3">
+    <div class="col-md-4">
+      <div class="card p-3 h-100">
+        <h5 class="mb-2">User Management</h5>
+        <p class="text-muted">Create, disable, promote to admin, reset MFA and passwords.</p>
+        <a class="btn btn-primary" href="/admin/users">Open</a>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card p-3 h-100">
+        <h5 class="mb-2">Audit Logs</h5>
+        <p class="text-muted">Track who did what and when, including IP addresses.</p>
+        <a class="btn btn-primary" href="/admin/logs">Open</a>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card p-3 h-100">
+        <h5 class="mb-2">Settings</h5>
+        <p class="text-muted">Password policy, session timeout, export controls (stub).</p>
+        <a class="btn btn-primary" href="/admin/settings">Open</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,6 @@
+# Sample additions
+server.forward-headers-strategy=framework
+# server.servlet.session.timeout=30m   # or enforce via SettingsService
+
+# Disable H2 console in prod
+# spring.h2.console.enabled=false
