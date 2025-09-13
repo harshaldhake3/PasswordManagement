@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="fragments/layout :: layout('MFA', ~{::body})">
+<body>
+  <h3>Multi‑Factor Authentication</h3>
+  <div th:if="${!enrolled}" class="alert alert-warning">
+    You have not enrolled in MFA yet. Ask an admin to reset MFA, then enroll.
+  </div>
+  <form method="post" action="/mfa/verify" class="card p-3" th:if="${enrolled}">
+    <label class="form-label">Enter 6‑digit code</label>
+    <input class="form-control" name="code" inputmode="numeric" minlength="6" maxlength="6" required>
+    <button class="btn btn-primary mt-3">Verify</button>
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+  </form>
+</body>
+</html>

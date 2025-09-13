@@ -1,0 +1,11 @@
+- [ ] Copy patch into project (preserve paths)
+- [ ] Add thymeleaf-extras-springsecurity6 to pom.xml
+- [ ] Build and run app
+- [ ] Seed first admin via SQL (H2/MySQL/Postgres)
+- [ ] Verify /admin pages load
+- [ ] (Opt) Replace SecurityConfig with hardened variant
+- [ ] (Opt) Run Flyway migration V2__settings_table.sql
+- [ ] (Opt) Wire SettingsService into controllers
+- [ ] (Opt) Add MFA dependency and enable MfaController route
+- [ ] (Opt) Call HibpService on password save
+- [ ] (Opt) Use table-extras.js for CSV export/column toggles
